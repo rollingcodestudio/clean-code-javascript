@@ -30,12 +30,6 @@ universally agreed upon. These are guidelines and nothing more, but they are
 ones codified over many years of collective experience by the authors of
 _Clean Code_.
 
-Our craft of software engineering is just a bit over 50 years old, and we are
-still learning a lot. When software architecture is as old as architecture
-itself, maybe then we will have harder rules to follow. For now, let these
-guidelines serve as a touchstone by which to assess the quality of the
-JavaScript code that you and your team produce.
-
 One more thing: knowing these won't immediately make you a better software
 developer, and working with them for many years doesn't mean you won't make
 mistakes. Every piece of code starts as a first draft, like wet clay getting
@@ -57,24 +51,6 @@ const yyyymmdstr = moment().format("YYYY/MM/DD");
 
 ```javascript
 const currentDate = moment().format("YYYY/MM/DD");
-```
-
-**[⬆ back to top](#table-of-contents)**
-
-### Use the same vocabulary for the same type of variable
-
-**Bad:**
-
-```javascript
-getUserInfo();
-getClientData();
-getCustomerRecord();
-```
-
-**Good:**
-
-```javascript
-getUser();
 ```
 
 **[⬆ back to top](#table-of-contents)**
@@ -139,7 +115,7 @@ Explicit is better than implicit.
 
 ```javascript
 const locations = ["Austin", "New York", "San Francisco"];
-locations.forEach(l => {
+locations.forEach((l) => {
   doStuff();
   doSomeOtherStuff();
   // ...
@@ -154,7 +130,7 @@ locations.forEach(l => {
 
 ```javascript
 const locations = ["Austin", "New York", "San Francisco"];
-locations.forEach(location => {
+locations.forEach((location) => {
   doStuff();
   doSomeOtherStuff();
   // ...
@@ -162,41 +138,6 @@ locations.forEach(location => {
   // ...
   dispatch(location);
 });
-```
-
-**[⬆ back to top](#table-of-contents)**
-
-### Don't add unneeded context
-
-If your class/object name tells you something, don't repeat that in your
-variable name.
-
-**Bad:**
-
-```javascript
-const Car = {
-  carMake: "Honda",
-  carModel: "Accord",
-  carColor: "Blue"
-};
-
-function paintCar(car) {
-  car.carColor = "Red";
-}
-```
-
-**Good:**
-
-```javascript
-const Car = {
-  make: "Honda",
-  model: "Accord",
-  color: "Blue"
-};
-
-function paintCar(car) {
-  car.color = "Red";
-}
 ```
 
 **[⬆ back to top](#table-of-contents)**
@@ -267,7 +208,6 @@ function createMenu(title, body, buttonText, cancellable) {
 }
 
 createMenu("Foo", "Bar", "Baz", true);
-
 ```
 
 **Good:**
@@ -281,7 +221,7 @@ createMenu({
   title: "Foo",
   body: "Bar",
   buttonText: "Baz",
-  cancellable: true
+  cancellable: true,
 });
 ```
 
@@ -299,7 +239,7 @@ this guide other than this, you'll be ahead of many developers.
 
 ```javascript
 function emailClients(clients) {
-  clients.forEach(client => {
+  clients.forEach((client) => {
     const clientRecord = database.lookup(client);
     if (clientRecord.isActive()) {
       email(client);
@@ -367,18 +307,18 @@ function parseBetterJSAlternative(code) {
 
   const statements = code.split(" ");
   const tokens = [];
-  REGEXES.forEach(REGEX => {
-    statements.forEach(statement => {
+  REGEXES.forEach((REGEX) => {
+    statements.forEach((statement) => {
       // ...
     });
   });
 
   const ast = [];
-  tokens.forEach(token => {
+  tokens.forEach((token) => {
     // lex...
   });
 
-  ast.forEach(node => {
+  ast.forEach((node) => {
     // parse...
   });
 }
@@ -390,7 +330,7 @@ function parseBetterJSAlternative(code) {
 function parseBetterJSAlternative(code) {
   const tokens = tokenize(code);
   const syntaxTree = parse(tokens);
-  syntaxTree.forEach(node => {
+  syntaxTree.forEach((node) => {
     // parse...
   });
 }
@@ -402,8 +342,8 @@ function tokenize(code) {
 
   const statements = code.split(" ");
   const tokens = [];
-  REGEXES.forEach(REGEX => {
-    statements.forEach(statement => {
+  REGEXES.forEach((REGEX) => {
+    statements.forEach((statement) => {
       tokens.push(/* ... */);
     });
   });
@@ -413,7 +353,7 @@ function tokenize(code) {
 
 function parse(tokens) {
   const syntaxTree = [];
-  tokens.forEach(token => {
+  tokens.forEach((token) => {
     syntaxTree.push(/* ... */);
   });
 
@@ -450,14 +390,14 @@ updating multiple places anytime you want to change one thing.
 
 ```javascript
 function showDeveloperList(developers) {
-  developers.forEach(developer => {
+  developers.forEach((developer) => {
     const expectedSalary = developer.calculateExpectedSalary();
     const experience = developer.getExperience();
     const githubLink = developer.getGithubLink();
     const data = {
       expectedSalary,
       experience,
-      githubLink
+      githubLink,
     };
 
     render(data);
@@ -465,14 +405,14 @@ function showDeveloperList(developers) {
 }
 
 function showManagerList(managers) {
-  managers.forEach(manager => {
+  managers.forEach((manager) => {
     const expectedSalary = manager.calculateExpectedSalary();
     const experience = manager.getExperience();
     const portfolio = manager.getMBAProjects();
     const data = {
       expectedSalary,
       experience,
-      portfolio
+      portfolio,
     };
 
     render(data);
@@ -484,13 +424,13 @@ function showManagerList(managers) {
 
 ```javascript
 function showEmployeeList(employees) {
-  employees.forEach(employee => {
+  employees.forEach((employee) => {
     const expectedSalary = employee.calculateExpectedSalary();
     const experience = employee.getExperience();
 
     const data = {
       expectedSalary,
-      experience
+      experience,
     };
 
     switch (employee.type) {
@@ -505,59 +445,6 @@ function showEmployeeList(employees) {
     render(data);
   });
 }
-```
-
-**[⬆ back to top](#table-of-contents)**
-
-### Set default objects with Object.assign
-
-**Bad:**
-
-```javascript
-const menuConfig = {
-  title: null,
-  body: "Bar",
-  buttonText: null,
-  cancellable: true
-};
-
-function createMenu(config) {
-  config.title = config.title || "Foo";
-  config.body = config.body || "Bar";
-  config.buttonText = config.buttonText || "Baz";
-  config.cancellable =
-    config.cancellable !== undefined ? config.cancellable : true;
-}
-
-createMenu(menuConfig);
-```
-
-**Good:**
-
-```javascript
-const menuConfig = {
-  title: "Order",
-  // User did not include 'body' key
-  buttonText: "Send",
-  cancellable: true
-};
-
-function createMenu(config) {
-  let finalConfig = Object.assign(
-    {
-      title: "Foo",
-      body: "Bar",
-      buttonText: "Baz",
-      cancellable: true
-    },
-    config
-  );
-  return finalConfig
-  // config now equals: {title: "Order", body: "Bar", buttonText: "Send", cancellable: true}
-  // ...
-}
-
-createMenu(menuConfig);
 ```
 
 **[⬆ back to top](#table-of-contents)**
@@ -641,96 +528,6 @@ console.log(newName); // ['Ryan', 'McDermott'];
 
 **[⬆ back to top](#table-of-contents)**
 
-### Avoid Side Effects (part 2)
-
-In JavaScript, some values are unchangeable (immutable) and some are changeable 
-(mutable). Objects and arrays are two kinds of mutable values so it's important 
-to handle them carefully when they're passed as parameters to a function. A 
-JavaScript function can change an object's properties or alter the contents of 
-an array which could easily cause bugs elsewhere.
-
-Suppose there's a function that accepts an array parameter representing a 
-shopping cart. If the function makes a change in that shopping cart array - 
-by adding an item to purchase, for example - then any other function that 
-uses that same `cart` array will be affected by this addition. That may be 
-great, however it could also be bad. Let's imagine a bad situation:
-
-The user clicks the "Purchase" button which calls a `purchase` function that
-spawns a network request and sends the `cart` array to the server. Because
-of a bad network connection, the `purchase` function has to keep retrying the
-request. Now, what if in the meantime the user accidentally clicks an "Add to Cart"
-button on an item they don't actually want before the network request begins?
-If that happens and the network request begins, then that purchase function
-will send the accidentally added item because the `cart` array was modified.
-
-A great solution would be for the `addItemToCart` function to always clone the 
-`cart`, edit it, and return the clone. This would ensure that functions that are still
-using the old shopping cart wouldn't be affected by the changes.
-
-Two caveats to mention to this approach:
-
-1. There might be cases where you actually want to modify the input object,
-   but when you adopt this programming practice you will find that those cases
-   are pretty rare. Most things can be refactored to have no side effects!
-
-2. Cloning big objects can be very expensive in terms of performance. Luckily,
-   this isn't a big issue in practice because there are
-   [great libraries](https://facebook.github.io/immutable-js/) that allow
-   this kind of programming approach to be fast and not as memory intensive as
-   it would be for you to manually clone objects and arrays.
-
-**Bad:**
-
-```javascript
-const addItemToCart = (cart, item) => {
-  cart.push({ item, date: Date.now() });
-};
-```
-
-**Good:**
-
-```javascript
-const addItemToCart = (cart, item) => {
-  return [...cart, { item, date: Date.now() }];
-};
-```
-
-**[⬆ back to top](#table-of-contents)**
-
-### Don't write to global functions
-
-Polluting globals is a bad practice in JavaScript because you could clash with another
-library and the user of your API would be none-the-wiser until they get an
-exception in production. Let's think about an example: what if you wanted to
-extend JavaScript's native Array method to have a `diff` method that could
-show the difference between two arrays? You could write your new function
-to the `Array.prototype`, but it could clash with another library that tried
-to do the same thing. What if that other library was just using `diff` to find
-the difference between the first and last elements of an array? This is why it
-would be much better to just use ES2015/ES6 classes and simply extend the `Array` global.
-
-**Bad:**
-
-```javascript
-Array.prototype.diff = function diff(comparisonArray) {
-  const hash = new Set(comparisonArray);
-  return this.filter(elem => !hash.has(elem));
-};
-```
-
-**Good:**
-
-```javascript
-class SuperArray extends Array {
-  diff(comparisonArray) {
-    const hash = new Set(comparisonArray);
-    return this.filter(elem => !hash.has(elem));
-  }
-}
-```
-
-**[⬆ back to top](#table-of-contents)**
-
 ### Favor functional programming over imperative programming
 
 JavaScript isn't a functional language in the way that Haskell is, but it has
@@ -743,20 +540,20 @@ Favor this style of programming when you can.
 const programmerOutput = [
   {
     name: "Uncle Bobby",
-    linesOfCode: 500
+    linesOfCode: 500,
   },
   {
     name: "Suzie Q",
-    linesOfCode: 1500
+    linesOfCode: 1500,
   },
   {
     name: "Jimmy Gosling",
-    linesOfCode: 150
+    linesOfCode: 150,
   },
   {
     name: "Gracie Hopper",
-    linesOfCode: 1000
-  }
+    linesOfCode: 1000,
+  },
 ];
 
 let totalOutput = 0;
@@ -772,20 +569,20 @@ for (let i = 0; i < programmerOutput.length; i++) {
 const programmerOutput = [
   {
     name: "Uncle Bobby",
-    linesOfCode: 500
+    linesOfCode: 500,
   },
   {
     name: "Suzie Q",
-    linesOfCode: 1500
+    linesOfCode: 1500,
   },
   {
     name: "Jimmy Gosling",
-    linesOfCode: 150
+    linesOfCode: 150,
   },
   {
     name: "Gracie Hopper",
-    linesOfCode: 1000
-  }
+    linesOfCode: 1000,
+  },
 ];
 
 const totalOutput = programmerOutput.reduce(
@@ -806,103 +603,16 @@ if (fsm.state === "fetching" && isEmpty(listNode)) {
 }
 ```
 
+Also avoid harcoding "fetching" as string please use a constant or even a ENV if it's something that should be configurable.
 **Good:**
 
 ```javascript
 function shouldShowSpinner(fsm, listNode) {
-  return fsm.state === "fetching" && isEmpty(listNode);
+  return fsm.state === CONST.FETCH_STATE && isEmpty(listNode);
 }
 
 if (shouldShowSpinner(fsmInstance, listNodeInstance)) {
   // ...
-}
-```
-
-**[⬆ back to top](#table-of-contents)**
-
-### Avoid negative conditionals
-
-**Bad:**
-
-```javascript
-function isDOMNodeNotPresent(node) {
-  // ...
-}
-
-if (!isDOMNodeNotPresent(node)) {
-  // ...
-}
-```
-
-**Good:**
-
-```javascript
-function isDOMNodePresent(node) {
-  // ...
-}
-
-if (isDOMNodePresent(node)) {
-  // ...
-}
-```
-
-**[⬆ back to top](#table-of-contents)**
-
-### Avoid conditionals
-
-This seems like an impossible task. Upon first hearing this, most people say,
-"how am I supposed to do anything without an `if` statement?" The answer is that
-you can use polymorphism to achieve the same task in many cases. The second
-question is usually, "well that's great but why would I want to do that?" The
-answer is a previous clean code concept we learned: a function should only do
-one thing. When you have classes and functions that have `if` statements, you
-are telling your user that your function does more than one thing. Remember,
-just do one thing.
-
-**Bad:**
-
-```javascript
-class Airplane {
-  // ...
-  getCruisingAltitude() {
-    switch (this.type) {
-      case "777":
-        return this.getMaxAltitude() - this.getPassengerCount();
-      case "Air Force One":
-        return this.getMaxAltitude();
-      case "Cessna":
-        return this.getMaxAltitude() - this.getFuelExpenditure();
-    }
-  }
-}
-```
-
-**Good:**
-
-```javascript
-class Airplane {
-  // ...
-}
-
-class Boeing777 extends Airplane {
-  // ...
-  getCruisingAltitude() {
-    return this.getMaxAltitude() - this.getPassengerCount();
-  }
-}
-
-class AirForceOne extends Airplane {
-  // ...
-  getCruisingAltitude() {
-    return this.getMaxAltitude();
-  }
-}
-
-class Cessna extends Airplane {
-  // ...
-  getCruisingAltitude() {
-    return this.getMaxAltitude() - this.getFuelExpenditure();
-  }
 }
 ```
 
@@ -932,43 +642,6 @@ function travelToTexas(vehicle) {
 ```javascript
 function travelToTexas(vehicle) {
   vehicle.move(this.currentLocation, new Location("texas"));
-}
-```
-
-**[⬆ back to top](#table-of-contents)**
-
-### Avoid type-checking (part 2)
-
-If you are working with basic primitive values like strings and integers,
-and you can't use polymorphism but you still feel the need to type-check,
-you should consider using TypeScript. It is an excellent alternative to normal
-JavaScript, as it provides you with static typing on top of standard JavaScript
-syntax. The problem with manually type-checking normal JavaScript is that
-doing it well requires so much extra verbiage that the faux "type-safety" you get
-doesn't make up for the lost readability. Keep your JavaScript clean, write
-good tests, and have good code reviews. Otherwise, do all of that but with
-TypeScript (which, like I said, is a great alternative!).
-
-**Bad:**
-
-```javascript
-function combine(val1, val2) {
-  if (
-    (typeof val1 === "number" && typeof val2 === "number") ||
-    (typeof val1 === "string" && typeof val2 === "string")
-  ) {
-    return val1 + val2;
-  }
-
-  throw new Error("Must be of type String or Number");
-}
-```
-
-**Good:**
-
-```javascript
-function combine(val1, val2) {
-  return val1 + val2;
 }
 ```
 
@@ -1059,7 +732,7 @@ function makeBankAccount() {
   // ...
 
   return {
-    balance: 0
+    balance: 0,
     // ...
   };
 }
@@ -1089,52 +762,12 @@ function makeBankAccount() {
   return {
     // ...
     getBalance,
-    setBalance
+    setBalance,
   };
 }
 
 const account = makeBankAccount();
 account.setBalance(100);
-```
-
-**[⬆ back to top](#table-of-contents)**
-
-### Make objects have private members
-
-This can be accomplished through closures (for ES5 and below).
-
-**Bad:**
-
-```javascript
-const Employee = function(name) {
-  this.name = name;
-};
-
-Employee.prototype.getName = function getName() {
-  return this.name;
-};
-
-const employee = new Employee("John Doe");
-console.log(`Employee name: ${employee.getName()}`); // Employee name: John Doe
-delete employee.name;
-console.log(`Employee name: ${employee.getName()}`); // Employee name: undefined
-```
-
-**Good:**
-
-```javascript
-function makeEmployee(name) {
-  return {
-    getName() {
-      return name;
-    }
-  };
-}
-
-const employee = makeEmployee("John Doe");
-console.log(`Employee name: ${employee.getName()}`); // Employee name: John Doe
-delete employee.name;
-console.log(`Employee name: ${employee.getName()}`); // Employee name: John Doe
 ```
 
 **[⬆ back to top](#table-of-contents)**
@@ -1151,7 +784,7 @@ classes until you find yourself needing larger and more complex objects.
 **Bad:**
 
 ```javascript
-const Animal = function(age) {
+const Animal = function (age) {
   if (!(this instanceof Animal)) {
     throw new Error("Instantiate Animal with `new`");
   }
@@ -1161,7 +794,7 @@ const Animal = function(age) {
 
 Animal.prototype.move = function move() {};
 
-const Mammal = function(age, furColor) {
+const Mammal = function (age, furColor) {
   if (!(this instanceof Mammal)) {
     throw new Error("Instantiate Mammal with `new`");
   }
@@ -1174,7 +807,7 @@ Mammal.prototype = Object.create(Animal.prototype);
 Mammal.prototype.constructor = Mammal;
 Mammal.prototype.liveBirth = function liveBirth() {};
 
-const Human = function(age, furColor, languageSpoken) {
+const Human = function (age, furColor, languageSpoken) {
   if (!(this instanceof Human)) {
     throw new Error("Instantiate Human with `new`");
   }
@@ -1378,66 +1011,6 @@ class Employee {
 
 ## **SOLID**
 
-### Single Responsibility Principle (SRP)
-
-As stated in Clean Code, "There should never be more than one reason for a class
-to change". It's tempting to jam-pack a class with a lot of functionality, like
-when you can only take one suitcase on your flight. The issue with this is
-that your class won't be conceptually cohesive and it will give it many reasons
-to change. Minimizing the amount of times you need to change a class is important.
-It's important because if too much functionality is in one class and you modify
-a piece of it, it can be difficult to understand how that will affect other
-dependent modules in your codebase.
-
-**Bad:**
-
-```javascript
-class UserSettings {
-  constructor(user) {
-    this.user = user;
-  }
-
-  changeSettings(settings) {
-    if (this.verifyCredentials()) {
-      // ...
-    }
-  }
-
-  verifyCredentials() {
-    // ...
-  }
-}
-```
-
-**Good:**
-
-```javascript
-class UserAuth {
-  constructor(user) {
-    this.user = user;
-  }
-
-  verifyCredentials() {
-    // ...
-  }
-}
-
-class UserSettings {
-  constructor(user) {
-    this.user = user;
-    this.auth = new UserAuth(user);
-  }
-
-  changeSettings(settings) {
-    if (this.auth.verifyCredentials()) {
-      // ...
-    }
-  }
-}
-```
-
-**[⬆ back to top](#table-of-contents)**
-
 ### Open/Closed Principle (OCP)
 
 As stated by Bertrand Meyer, "software entities (classes, modules, functions,
@@ -1469,11 +1042,11 @@ class HttpRequester {
 
   fetch(url) {
     if (this.adapter.name === "ajaxAdapter") {
-      return makeAjaxCall(url).then(response => {
+      return makeAjaxCall(url).then((response) => {
         // transform response and return
       });
     } else if (this.adapter.name === "nodeAdapter") {
-      return makeHttpCall(url).then(response => {
+      return makeHttpCall(url).then((response) => {
         // transform response and return
       });
     }
@@ -1520,7 +1093,7 @@ class HttpRequester {
   }
 
   fetch(url) {
-    return this.adapter.request(url).then(response => {
+    return this.adapter.request(url).then((response) => {
       // transform response and return
     });
   }
@@ -1587,7 +1160,7 @@ class Square extends Rectangle {
 }
 
 function renderLargeRectangles(rectangles) {
-  rectangles.forEach(rectangle => {
+  rectangles.forEach((rectangle) => {
     rectangle.setWidth(4);
     rectangle.setHeight(5);
     const area = rectangle.getArea(); // BAD: Returns 25 for Square. Should be 20.
@@ -1636,7 +1209,7 @@ class Square extends Shape {
 }
 
 function renderLargeShapes(shapes) {
-  shapes.forEach(shape => {
+  shapes.forEach((shape) => {
     const area = shape.getArea();
     shape.render(area);
   });
@@ -1685,7 +1258,7 @@ class DOMTraverser {
 
 const $ = new DOMTraverser({
   rootNode: document.getElementsByTagName("body"),
-  animationModule() {} // Most of the time, we won't need to animate when traversing.
+  animationModule() {}, // Most of the time, we won't need to animate when traversing.
   // ...
 });
 ```
@@ -1719,8 +1292,8 @@ class DOMTraverser {
 const $ = new DOMTraverser({
   rootNode: document.getElementsByTagName("body"),
   options: {
-    animationModule() {}
-  }
+    animationModule() {},
+  },
 });
 ```
 
@@ -1772,7 +1345,7 @@ class InventoryTracker {
   }
 
   requestItems() {
-    this.items.forEach(item => {
+    this.items.forEach((item) => {
       this.requester.requestItem(item);
     });
   }
@@ -1792,7 +1365,7 @@ class InventoryTracker {
   }
 
   requestItems() {
-    this.items.forEach(item => {
+    this.items.forEach((item) => {
       this.requester.requestItem(item);
     });
   }
@@ -1919,7 +1492,7 @@ get(
     if (requestErr) {
       console.error(requestErr);
     } else {
-      writeFile("article.html", body, writeErr => {
+      writeFile("article.html", body, (writeErr) => {
         if (writeErr) {
           console.error(writeErr);
         } else {
@@ -1938,13 +1511,13 @@ import { get } from "request-promise";
 import { writeFile } from "fs-extra";
 
 get("https://en.wikipedia.org/wiki/Robert_Cecil_Martin")
-  .then(body => {
+  .then((body) => {
     return writeFile("article.html", body);
   })
   .then(() => {
     console.log("File written");
   })
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
   });
 ```
@@ -1966,13 +1539,13 @@ import { get } from "request-promise";
 import { writeFile } from "fs-extra";
 
 get("https://en.wikipedia.org/wiki/Robert_Cecil_Martin")
-  .then(body => {
+  .then((body) => {
     return writeFile("article.html", body);
   })
   .then(() => {
     console.log("File written");
   })
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
   });
 ```
@@ -1985,9 +1558,7 @@ import { writeFile } from "fs-extra";
 
 async function getCleanCodeArticle() {
   try {
-    const body = await get(
-      "https://en.wikipedia.org/wiki/Robert_Cecil_Martin"
-    );
+    const body = await get("https://en.wikipedia.org/wiki/Robert_Cecil_Martin");
     await writeFile("article.html", body);
     console.log("File written");
   } catch (err) {
@@ -1995,7 +1566,7 @@ async function getCleanCodeArticle() {
   }
 }
 
-getCleanCodeArticle()
+getCleanCodeArticle();
 ```
 
 **[⬆ back to top](#table-of-contents)**
@@ -2051,10 +1622,10 @@ from `try/catch`.
 
 ```javascript
 getdata()
-  .then(data => {
+  .then((data) => {
     functionThatMightThrow(data);
   })
-  .catch(error => {
+  .catch((error) => {
     console.log(error);
   });
 ```
@@ -2063,10 +1634,10 @@ getdata()
 
 ```javascript
 getdata()
-  .then(data => {
+  .then((data) => {
     functionThatMightThrow(data);
   })
-  .catch(error => {
+  .catch((error) => {
     // One option (more noisy than console.log):
     console.error(error);
     // Another option:
@@ -2328,13 +1899,13 @@ proper indentation and formatting give the visual structure to your code.
 ////////////////////////////////////////////////////////////////////////////////
 $scope.model = {
   menu: "foo",
-  nav: "bar"
+  nav: "bar",
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 // Action setup
 ////////////////////////////////////////////////////////////////////////////////
-const actions = function() {
+const actions = function () {
   // ...
 };
 ```
@@ -2344,10 +1915,10 @@ const actions = function() {
 ```javascript
 $scope.model = {
   menu: "foo",
-  nav: "bar"
+  nav: "bar",
 };
 
-const actions = function() {
+const actions = function () {
   // ...
 };
 ```
@@ -2358,28 +1929,7 @@ const actions = function() {
 
 This is also available in other languages:
 
-- ![am](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Armenia.png) **Armenian**: [hanumanum/clean-code-javascript/](https://github.com/hanumanum/clean-code-javascript)
-- ![bd](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Bangladesh.png) **Bangla(বাংলা)**: [InsomniacSabbir/clean-code-javascript/](https://github.com/InsomniacSabbir/clean-code-javascript/)
-- ![br](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Brazil.png) **Brazilian Portuguese**: [fesnt/clean-code-javascript](https://github.com/fesnt/clean-code-javascript)
-- ![cn](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/China.png) **Simplified Chinese**:
-  - [alivebao/clean-code-js](https://github.com/alivebao/clean-code-js)
-  - [beginor/clean-code-javascript](https://github.com/beginor/clean-code-javascript)
-- ![tw](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Taiwan.png) **Traditional Chinese**: [AllJointTW/clean-code-javascript](https://github.com/AllJointTW/clean-code-javascript)
-- ![fr](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/France.png) **French**: [GavBaros/clean-code-javascript-fr](https://github.com/GavBaros/clean-code-javascript-fr)
-- ![de](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Germany.png) **German**: [marcbruederlin/clean-code-javascript](https://github.com/marcbruederlin/clean-code-javascript)
-- ![id](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Indonesia.png) **Indonesia**: [andirkh/clean-code-javascript/](https://github.com/andirkh/clean-code-javascript/)
-- ![it](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Italy.png) **Italian**: [frappacchio/clean-code-javascript/](https://github.com/frappacchio/clean-code-javascript/)
-- ![ja](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Japan.png) **Japanese**: [mitsuruog/clean-code-javascript/](https://github.com/mitsuruog/clean-code-javascript/)
-- ![kr](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/South-Korea.png) **Korean**: [qkraudghgh/clean-code-javascript-ko](https://github.com/qkraudghgh/clean-code-javascript-ko)
-- ![pl](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Poland.png) **Polish**: [greg-dev/clean-code-javascript-pl](https://github.com/greg-dev/clean-code-javascript-pl)
-- ![ru](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Russia.png) **Russian**:
-  - [BoryaMogila/clean-code-javascript-ru/](https://github.com/BoryaMogila/clean-code-javascript-ru/)
-  - [maksugr/clean-code-javascript](https://github.com/maksugr/clean-code-javascript)
 - ![es](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Spain.png) **Spanish**: [tureey/clean-code-javascript](https://github.com/tureey/clean-code-javascript)
 - ![es](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Uruguay.png) **Spanish**: [andersontr15/clean-code-javascript](https://github.com/andersontr15/clean-code-javascript-es)
-- ![rs](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Serbia.png) **Serbian**: [doskovicmilos/clean-code-javascript/](https://github.com/doskovicmilos/clean-code-javascript)
-- ![tr](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Turkey.png) **Turkish**: [bsonmez/clean-code-javascript](https://github.com/bsonmez/clean-code-javascript/tree/turkish-translation)
-- ![ua](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Ukraine.png) **Ukrainian**: [mindfr1k/clean-code-javascript-ua](https://github.com/mindfr1k/clean-code-javascript-ua)
-- ![vi](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Vietnam.png) **Vietnamese**: [hienvd/clean-code-javascript/](https://github.com/hienvd/clean-code-javascript/)
 
 **[⬆ back to top](#table-of-contents)**
